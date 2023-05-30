@@ -57,7 +57,7 @@ const Tags = ({edit}) => {
         {content ? 
           <p>{content.map((tag) => 
                   <Badge className="ml-3 p-1 border" key={tag.id}>{tag.name}
-                  {edit && <CloseButton variant="white" onClick={submit("/delete", {method: "DELETE"})}/>}</Badge>
+                  {edit && <CloseButton variant="white" onClick={submit("/delete/"+tag.id, {method: "DELETE"})}/>}</Badge>
               )}
           </p>
         :
