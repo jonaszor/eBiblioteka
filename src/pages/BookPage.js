@@ -5,16 +5,23 @@ import BookService from "../services/book.service";
 import UserService from "../services/user.service";
 import useUser from "../services/useUser";
 import { Link, redirect, useLoaderData, useParams } from "react-router-dom";
+import AuthService from "../services/auth.service";
 
 const BookPage = () => {
   const content = useLoaderData();
   
   const [currentUser] = useUser();
-  /*const [isAddedToWatchList, setisAddedToWatchList] = useState(false);
+  const [isAddedToWatchList, setisAddedToWatchList] = useState(false);
+
+  function handleClick () {
+      UserService.postUsertoggleWatchlist(content.id, !isAddedToWatchList)
+  }
 
   useEffect(async () => {
-    currentUser && console.log(currentUser);
-    let userProfile = await UserService.getUserProfileById(currentUser.id);
+    //let user = AuthService.getCurrentUser();
+    let userProfile = await UserService.getUserProfileById("265582f0-e8f2-4465-b304-3d8926571e3f");
+    userProfile = await userProfile.data;
+    console.log(userProfile);
     let watchList = userProfile.watchList;
     console.log(watchList);
     if(watchList.length == 0){
@@ -27,7 +34,7 @@ const BookPage = () => {
         setisAddedToWatchList(true);
     }
       return;
-  },[])*/
+  },[])
 
   return (
     <div className="container bg-light shadow-lg">
@@ -42,6 +49,7 @@ const BookPage = () => {
               <Stack className="float-right">
                 {(currentUser?.role == "admin") && <Link to={"./edit"}><Button>Edit</Button></Link>}
                 <Button {...(content.bookAmount < 1) ? "disabled" : ""} className="mx-1">Wypożycz</Button>
+                <Button variant={isAddedToWatchList ? "danger" : "success"} onClick={handleClick}>{isAddedToWatchList ? "Usun z watchlisty" : "Dodaj do watchlisty"}</Button>
               </Stack>
               <h1 className="mx-2">{content.title}</h1>
               

@@ -23,7 +23,15 @@ const postUsertoggleBlock = (userid, isBlocked) => {
   if(isBlocked)
     return axios.post(API_URL_USER + `User/${userid}/UnBlock`,{},{headers: authHeader()})
   return axios.post(API_URL_USER + `User/${userid}/Block`,{},{headers: authHeader()})
-}
+};
+
+const postUsertoggleWatchlist = (bookid, isAdding) => {
+  if(isAdding)
+    return axios.post(API_URL_USER + `User/AddToWatchList/${bookid}`,{},{headers: authHeader()})
+  return axios.post(API_URL_USER + `User/RemoveFromWatchList/${bookid}`,{},{headers: authHeader()})
+};
+
+
 
 /*const saveUser = (token) =>{
     decoded = jwtDecode(token);
@@ -34,7 +42,8 @@ const UserService = {
   getUsersList,
   getUserProfileById,
   getUserProfie,
-  postUsertoggleBlock
+  postUsertoggleBlock,
+  postUsertoggleWatchlist
 };
 
 export default UserService;
