@@ -7,6 +7,11 @@ const getUsersList = () => {
   return axios.get(API_URL_USER + "User", { headers: authHeader() });
 };
 
+const getUserProfileById = (id) => {
+  console.log(id);
+  return axios.get(API_URL_USER + `User/ById/${id}`, { headers: authHeader() });
+};
+
 /*const saveUser = (token) =>{
     decoded = jwtDecode(token);
     localStorage.setItem("user", JSON.stringify(response.data));
@@ -14,6 +19,7 @@ const getUsersList = () => {
 
 const UserService = {
   getUsersList,
+  getUserProfileById
 };
 
 export default UserService;

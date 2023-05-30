@@ -83,7 +83,9 @@ const router = createBrowserRouter(
         <Route path="register" element={<Register/>} />
         <Route element={<ProtectedRoute isAllowed={!!currentUser}/>}>
           <Route path="profile" element={<Profile/>} />
-          <Route path="user" element={<BoardUser/>} />
+          <Route path="user/:id/profile" 
+            element={<BoardUser/>} 
+            loader={async (id) => ((await UserService.getUserProfileById(id)).data)}/>
           <Route path="users" 
             element={<Users/>} 
             loader={async () => ((await UserService.getUsersList()).data)}/>
