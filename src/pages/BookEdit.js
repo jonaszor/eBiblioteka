@@ -94,13 +94,13 @@ export default function BookEdit(){
                 
                 
                 <p>Autorzy: {content.authors.map((author) => //Bruh
-                    <span className="ml-1 p-1 border rounded" key={author.id}>{author.firstname + " " +author.lastname}</span>
+                    <span className="ms-1 p-1 border rounded" key={author.id}>{author.firstname + " " +author.lastname}</span>
                 )}</p>
                 <p>Kategorie: {content.categories.map((category) => 
-                    <Badge bg="primary" className="ml-1 text-white" key={category.id}>{category.name}</Badge>
+                    <Badge bg="primary" className="ms-1 text-white" key={category.id}>{category.name}</Badge>
                 )}</p>
                 <p>Tagi: {content.tags.map((tag) => 
-                    <Badge bg="primary" className="ml-1 text-white" key={tag.id}>{tag.name}</Badge>
+                    <Badge bg="primary" className="ms-1 text-white" key={tag.id}>{tag.name}</Badge>
                 )}</p>
                 <textarea
                     name="description"
