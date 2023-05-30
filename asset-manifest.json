@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "https://jonaszor.github.io/eBiblioteka/static/css/main.070b26d8.css",
-    "main.js": "https://jonaszor.github.io/eBiblioteka/static/js/main.b8f49cc4.js",
+    "main.js": "https://jonaszor.github.io/eBiblioteka/static/js/main.dba739a8.js",
     "index.html": "https://jonaszor.github.io/eBiblioteka/index.html",
     "main.070b26d8.css.map": "https://jonaszor.github.io/eBiblioteka/static/css/main.070b26d8.css.map",
-    "main.b8f49cc4.js.map": "https://jonaszor.github.io/eBiblioteka/static/js/main.b8f49cc4.js.map"
+    "main.dba739a8.js.map": "https://jonaszor.github.io/eBiblioteka/static/js/main.dba739a8.js.map"
   },
   "entrypoints": [
     "static/css/main.070b26d8.css",
-    "static/js/main.b8f49cc4.js"
+    "static/js/main.dba739a8.js"
   ]
 }
