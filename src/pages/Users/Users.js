@@ -25,12 +25,9 @@ const Users = () => {
                 
               </Col>
               <Col md={2}>
-                <Row>
-                  <Col md={6}>
+                <Row className="mx-auto">
+                  <Col md={8} className="mx-auto">
                   {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button>Manage</Button></Link>}
-                  </Col>
-                  <Col md={6}>
-                  <Link to={`/user/${userData.id}/profile`}><Button className="mx-1">Profile</Button></Link>
                   </Col>
                 </Row>
               </Col>

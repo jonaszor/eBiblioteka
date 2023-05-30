@@ -1,6 +1,6 @@
 import {React, StrictMode} from "react";
 import {createRoot} from "react-dom/client";
-import { Routes, Route,  Link, Outlet, Navigate, createBrowserRouter, createRoutesFromElements, RouterProvider, redirect } from "react-router-dom";
+import { Routes, Route,  Link, Outlet, Navigate, createBrowserRouter, createRoutesFromElements, RouterProvider} from "react-router-dom";
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
@@ -10,6 +10,7 @@ import BookService from "./services/book.service";
 import UserService from "./services/user.service";
 
 import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
@@ -26,6 +27,7 @@ import BookEdit from "./pages/BookEdit";
 import ErrorPage from "./pages/ErrorPage";
 
 import Users from "./pages/Users/Users";
+import User from "./pages/Users/User";
 
 const ProtectedRoute = ({
   isAllowed,
@@ -65,17 +67,20 @@ const router = createBrowserRouter(
         <Route path="author" element={<Authors/>} />
         <Route path="tag" element={<Tags/>}
           loader={async () => (await BookService.tags.getTags()).data}
-          action={async (data) => console.log(data)}
         />
         <Route element={<ProtectedRoute isAllowed={currentUser && currentUser.role == "admin"}/>}>
           <Route path="tag/edit" element={<Tags edit={true}/>}
             loader={async () => (await BookService.tags.getTags()).data}
+          />
+          <Route path="tag/delete/:id"
+            action={async ({params}) => {
+              return await BookService.tags.deleteTag(params.id)
+            }}
+          />
+          <Route path="tag/add"
             action={async ({params, request}) => {
               let formData = await request.formData();
               return await BookService.tags.postTag(formData.get("tagName"))}}
-          />
-          <Route path="tag/delete"
-            action={async (data) => console.log(data)}
           />
         </Route>
         <Route path="category" element={<Categories/>} />
@@ -83,9 +88,13 @@ const router = createBrowserRouter(
         <Route path="register" element={<Register/>} />
         <Route element={<ProtectedRoute isAllowed={!!currentUser}/>}>
           <Route path="profile" element={<Profile/>} />
+          <Route path="logout" element={ <Logout/> }/>
+          <Route path="user/profile" 
+            element={<User/>} 
+            loader={async () => ((await UserService.getUserProfie()).data)}/>
           <Route path="user/:id/profile" 
-            element={<BoardUser/>} 
-            loader={async (id) => ((await UserService.getUserProfileById(id)).data)}/>
+            element={<User/>} 
+            loader={async ({params}) => ((await UserService.getUserProfileById(params.id)).data)}/>
           <Route path="users" 
             element={<Users/>} 
             loader={async () => ((await UserService.getUsersList()).data)}/>
@@ -105,4 +114,4 @@ const router = createBrowserRouter(
 root.render(
   <RouterProvider router={router}/>
 );
-serviceWorker.unregister();
+//serviceWorker.unregister();

@@ -41,6 +41,7 @@ const login = (username, password) => {
 };
 
 const logout = () => {
+  console.log("Logging out")
   localStorage.removeItem("user");
 };
 

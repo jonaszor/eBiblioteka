@@ -31,6 +31,10 @@ const postTag = (tagName)=>{
   return axios.post(API_URL_BOOK + "/Tag", tagName ,{headers: {...authHeader(), 'Content-Type': 'application/json'} })
 }
 
+const deleteTag = (tagId)=>{
+  return axios.delete(API_URL_BOOK + "/Tag/"+tagId,{headers: {...authHeader()} })
+}
+
 const getAuthors = () => {
   return axios.get(API_URL_BOOK + "/Author");
 };
@@ -61,6 +65,7 @@ const BookService = {
   tags:{
     getTags,
     postTag,
+    deleteTag
   },
   getAuthors,
   getUserBoard,

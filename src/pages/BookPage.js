@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Image, Badge, Button, Container, Row, Col, Stack } from "react-bootstrap";
 
 import BookService from "../services/book.service";
+import UserService from "../services/user.service";
 import useUser from "../services/useUser";
 import { Link, redirect, useLoaderData, useParams } from "react-router-dom";
 
@@ -9,6 +10,24 @@ const BookPage = () => {
   const content = useLoaderData();
   
   const [currentUser] = useUser();
+  /*const [isAddedToWatchList, setisAddedToWatchList] = useState(false);
+
+  useEffect(async () => {
+    currentUser && console.log(currentUser);
+    let userProfile = await UserService.getUserProfileById(currentUser.id);
+    let watchList = userProfile.watchList;
+    console.log(watchList);
+    if(watchList.length == 0){
+      setisAddedToWatchList(false);
+    }else{
+      let bookFound = watchList.find((book) => book.id == content.id);
+      if(!bookFound)
+        setisAddedToWatchList(false);
+      else
+        setisAddedToWatchList(true);
+    }
+      return;
+  },[])*/
 
   return (
     <div className="container bg-light shadow-lg">
@@ -27,13 +46,13 @@ const BookPage = () => {
               <h1 className="mx-2">{content.title}</h1>
               
               <p>Autorzy: {content.authors.map((author) => 
-                  <span className="ml-1 p-1 border rounded" key={author.id}>{author.firstname + " " +author.lastname}</span>
+                  <span className="ms-1 p-1 border rounded" key={author.id}>{author.firstname + " " +author.lastname}</span>
               )}</p>
               <p>Kategorie: {content.categories.map((category) => 
-                  <Badge bg="primary" className="ml-1 text-white" key={category.id}>{category.name}</Badge>
+                  <Badge bg="primary" className="ms-1 text-white" key={category.id}>{category.name}</Badge>
               )}</p>
               <p>Tagi: {content.tags.map((tag) => 
-                  <Badge bg="primary" className="ml-1 text-white" key={tag.id}>{tag.name}</Badge>
+                  <Badge bg="primary" className="ms-1 text-white" key={tag.id}>{tag.name}</Badge>
               )}</p>
               <p className="m-3">Opis: {content.description}</p>
             </Col>

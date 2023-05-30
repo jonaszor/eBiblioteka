@@ -4,14 +4,16 @@ import Nav from 'react-bootstrap/Nav';
 import NavBar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import AuthService from "../services/auth.service"
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 export default function Navbar({user}){
     return(
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <Link to={"/"} className="navbar-brand">
+        <Link to={"/"} className="navbar-brand ms-3">
           E-Biblioteka v2
         </Link>
-        <div className="navbar-nav mr-auto">
+        <div className="navbar-nav me-auto">
 
           <li className="nav-item">
             <NavLink to={"/books"} className="nav-link">
@@ -45,47 +47,28 @@ export default function Navbar({user}){
             </li>
           )}
 
-          {(user?.role == "admin") && ( 
             <li className="nav-item">
-              <NavDropdown title="Admin" >
-              <NavDropdown.Item>
-                <NavLink style={{ textDecoration: 'none' }} to={"/admin"}>
-                  Admin Board
-                </NavLink>
-              </NavDropdown.Item>
-              <NavDropdown.Item>
-                <NavLink style={{ textDecoration: 'none' }} to={"/users"}>
-                  Users list
-                </NavLink>
-              </NavDropdown.Item>
-            </NavDropdown>
-            </li>
-          )}
-
-          {user?.role && (
-            <li className="nav-item">
-              <NavLink to={"/user"} className="nav-link">
-                User
+              <NavLink to={"/users"} className="nav-link">
+                Users
               </NavLink>
             </li>
-          )}
         </div>
 
         {user ? (
-          <div className="navbar-nav ml-auto">
+          <div className="navbar-nav ms-auto">
             <li className="nav-item">
               <NavLink to={"/profile"} className="nav-link">
                 {user.email}
               </NavLink>
             </li>
             <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={AuthService.logout}>
-                LogOut
-              </a>
+            <NavLink to={"/logout"} className="nav-link">
+                Logout
+              </NavLink>
             </li>
           </div>
         ) : (
-          <div className="navbar-nav ml-auto">
+          <div className="navbar-nav ms-auto">
             <li className="nav-item">
               <NavLink to={"/login"} className="nav-link">
                 Login

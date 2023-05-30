@@ -5,7 +5,7 @@ import "./App.css";
 import bgImage from './bg.jpg';
 
 import AuthService from "./services/auth.service";
-import Navbar from "./components/Navbar";
+import NavBarScroll from "./components/Navbar";
 
 const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:3000/eBiblioteka`;
 
@@ -23,7 +23,7 @@ const App = () => {
   return (
     <div style={{backgroundImage: `url("${PUBLIC_URL}/bg.jpg")`, minHeight: "100vh", backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "cover"}} >
 
-      <Navbar user={currentUser}/>
+      <NavBarScroll user={currentUser}/>
 
       <div className="container mt-3" >
         <Outlet/>
