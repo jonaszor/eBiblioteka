@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/eBiblioteka/static/css/main.070b26d8.css",
-    "main.js": "/eBiblioteka/static/js/main.2ac3a10c.js",
-    "index.html": "/eBiblioteka/index.html",
-    "main.070b26d8.css.map": "/eBiblioteka/static/css/main.070b26d8.css.map",
-    "main.2ac3a10c.js.map": "/eBiblioteka/static/js/main.2ac3a10c.js.map"
+    "main.css": "/static/css/main.070b26d8.css",
+    "main.js": "/static/js/main.2ac3a10c.js",
+    "index.html": "/index.html",
+    "main.070b26d8.css.map": "/static/css/main.070b26d8.css.map",
+    "main.2ac3a10c.js.map": "/static/js/main.2ac3a10c.js.map"
   },
   "entrypoints": [
     "static/css/main.070b26d8.css",
