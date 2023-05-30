@@ -98,11 +98,20 @@ const User = () => {
               <Col md={2}>
               </Col>
               <Col fluid={"true"} md={9}>
-                  {userData.watchList}
+                {userData.watchList && userData.watchList.length != 0 && userData.watchList.map((book) => 
+                    <p>
+                      <ul>
+                        <li>[{book.id}] {book.title}</li>
+                        <li>{book.imageUrl}</li>
+                      </ul>
+                    </p>
+                    
+                )}
               </Col>
               <Col md={1}>
               </Col>
             </Row>
+            
           </div>
       </div>
     )
@@ -126,6 +135,23 @@ const User = () => {
               </Col>
               <Col md={1}>
                 <Link to={`/users`}><Button className="mx-auto">Powrót</Button></Link>
+              </Col>
+            </Row>
+            <Row md={3}>
+              <Col md={2}>
+              </Col>
+              <Col fluid={"true"} md={9}>
+                {userData.watchList && userData.watchList.length != 0 && userData.watchList.map((book) => 
+                    <p>
+                      <ul>
+                        <li>[{book.id}] {book.title}</li>
+                        <li>{book.imageUrl}</li>
+                      </ul>
+                    </p>
+                    
+                )}
+              </Col>
+              <Col md={1}>
               </Col>
             </Row>
           </div>
