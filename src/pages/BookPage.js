@@ -17,10 +17,11 @@ const BookPage = () => {
       UserService.postUsertoggleWatchlist(content.id, !isAddedToWatchList)
   }
 
-  useEffect(async () => {
+  useEffect(() => {
+    /*
     //let user = AuthService.getCurrentUser();
-    let userProfile = await UserService.getUserProfileById("265582f0-e8f2-4465-b304-3d8926571e3f");
-    userProfile = await userProfile.data;
+    let userProfile = async () => await UserService.getUserProfileById("265582f0-e8f2-4465-b304-3d8926571e3f");
+    userProfile = async () => await userProfile.data;
     console.log(userProfile);
     let watchList = userProfile.watchList;
     console.log(watchList);
@@ -33,7 +34,7 @@ const BookPage = () => {
       else
         setisAddedToWatchList(true);
     }
-      return;
+    */
   },[])
 
   return (

@@ -19,6 +19,10 @@ const editBookbyId = (id) => {
   return axios.patch(API_URL_BOOK + "/Book/"+id, { headers: authHeader() })
 }
 
+const addBook = (data) =>{
+  return axios.post(API_URL_BOOK + "/Book", data, { headers: authHeader() })
+}
+
 const getCategories = () => {
   return axios.get(API_URL_BOOK + "/Category");
 };
@@ -61,13 +65,18 @@ const BookService = {
   getBooks,
   getBookbyId,
   editBookbyId,
-  getCategories,
+  addBook,
+  categories:{
+    getCategories,
+  },
   tags:{
     getTags,
     postTag,
     deleteTag
   },
-  getAuthors,
+  authors:{
+    getAuthors,
+  },
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,

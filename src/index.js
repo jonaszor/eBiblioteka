@@ -63,6 +63,13 @@ const router = createBrowserRouter(
             loader={async ({params}) => ((await BookService.getBookbyId(params.id)).data)}
             action={async ({params}) => ((await BookService.editBookbyId(params.id)).data)}
           />
+          <Route path="books/add" 
+            element={<BookEdit isAdd={true}/>} 
+            //loader={async ({params}) => ((await BookService.getBookbyId(params.id)).data)}
+            action={async ({request}) => {
+              let data = Object.fromEntries(await request.formData());
+              return (await BookService.addBook(data)).data}}
+          />
         </Route>
         <Route path="author" element={<Authors/>} />
         <Route path="tag" element={<Tags/>}
