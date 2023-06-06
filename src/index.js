@@ -1,6 +1,6 @@
 import {React, StrictMode} from "react";
 import {createRoot} from "react-dom/client";
-import { Routes, Route,  Link, Outlet, Navigate, createBrowserRouter, createRoutesFromElements, RouterProvider} from "react-router-dom";
+import { Routes, Route,  Link, Outlet, Navigate, createBrowserRouter, createRoutesFromElements, RouterProvider, json} from "react-router-dom";
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
@@ -28,6 +28,7 @@ import ErrorPage from "./pages/ErrorPage";
 
 import Users from "./pages/Users/Users";
 import User from "./pages/Users/User";
+import fDataToJSON from "./services/formDataToJson";
 
 const ProtectedRoute = ({
   isAllowed,
@@ -67,7 +68,8 @@ const router = createBrowserRouter(
             element={<BookEdit isAdd={true}/>} 
             //loader={async ({params}) => ((await BookService.getBookbyId(params.id)).data)}
             action={async ({request}) => {
-              let data = Object.fromEntries(await request.formData());
+              let data = await request.formData();
+              console.log(fDataToJSON(data))
               return (await BookService.addBook(data)).data}}
           />
         </Route>

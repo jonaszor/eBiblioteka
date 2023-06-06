@@ -15,12 +15,12 @@ const getBookbyId = (id) => {
   return axios.get(API_URL_BOOK + "/Book/"+id);
 };
 
-const editBookbyId = (id) => {
-  return axios.patch(API_URL_BOOK + "/Book/"+id, { headers: authHeader() })
+const editBookbyId = (id, data) => {
+  return axios.patch(API_URL_BOOK + "/Book/"+id, data, { headers: authHeader() })
 }
 
 const addBook = (data) =>{
-  return axios.post(API_URL_BOOK + "/Book", data, { headers: authHeader() })
+  return axios.post(API_URL_BOOK + "/Book", data, {headers: {...authHeader(), 'Content-Type': 'application/json'} })
 }
 
 const getCategories = () => {
