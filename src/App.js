@@ -21,7 +21,7 @@ const App = () => {
   }, []);
 
   return (
-    <div style={{backgroundImage: `url("${PUBLIC_URL}/bg.jpg")`, minHeight: "100vh", backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundSize: "cover"}} >
+    <div style={{backgroundImage: `url("${PUBLIC_URL}/bg.jpg")`, minHeight: "100vh", backgroundRepeat: "repeat", backgroundAttachment: "fixed"}} >
 
       <NavBarScroll user={currentUser}/>
 
