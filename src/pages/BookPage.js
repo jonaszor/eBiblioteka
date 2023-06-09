@@ -30,7 +30,7 @@ const BookPage = () => {
     }
 
     if(currentUser){
-      getProfile().then((profile)=>{ //Wait until you have profile, then:
+      getProfile().then((profile)=>{ //Wait until you have profile, then. Maybe the watchlist part should be moved to a seperate component
         let isInWatchlist = profile.watchList.some((book) => book.id == content.id)
         setisAddedToWatchList(isInWatchlist)
       })
@@ -49,8 +49,8 @@ const BookPage = () => {
             <Col fluid={"true"} md={9} className="">
               <Stack direction="horizontal" className="flex-row-reverse">
                 {(currentUser?.role == "admin") && <Link to={"./edit"}><Button>Edit</Button></Link>}
-                <Button {...(content.bookAmount < 1) ? "disabled" : ""} className="mx-1">Wypożycz</Button>
-                <Button variant={isAddedToWatchList ? "danger" : "success"} onClick={handleClick}>{isAddedToWatchList ? "Usun z watchlisty" : "Dodaj do watchlisty"}</Button>
+                {currentUser && <Button {...(content.bookAmount < 1) ? "disabled" : ""} className="mx-1">Wypożycz</Button>}
+                {currentUser && <Button variant={isAddedToWatchList ? "danger" : "success"} onClick={handleClick}>{isAddedToWatchList ? "Usun z watchlisty" : "Dodaj do watchlisty"}</Button>}
               </Stack>
               <h1 className="mx-2">{content.title}</h1>
               
@@ -71,7 +71,7 @@ const BookPage = () => {
         :
         <div>loading</div>}
       <hr className="w-100"/>
-      <Reactions reactions={content.reactions}/>
+      <Reactions reactions={content.reactions} profile={userProfile} bookId={content.id}/>
       <Reviews reviews = {content?.reviews}/>
     </div>
   );

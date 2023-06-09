@@ -31,6 +31,12 @@ const postUsertoggleWatchlist = (bookid, isAdding) => {
   return axios.delete(API_URL_USER + `User/RemoveFromWatchList/${bookid}`,{headers: authHeader()})
 };
 
+const postUserReaction = (bookId, isRemoving, isLiking) => {
+  if(isRemoving)
+    return axios.delete(API_URL_USER + `User/Reaction/${bookId}`,{headers: authHeader()})
+  return axios.post(API_URL_USER + `User/Reaction/${bookId}`,{},{headers: authHeader(), params:{like: isLiking}})
+}
+
 
 
 /*const saveUser = (token) =>{
@@ -43,7 +49,8 @@ const UserService = {
   getUserProfileById,
   getUserProfie,
   postUsertoggleBlock,
-  postUsertoggleWatchlist
+  postUsertoggleWatchlist,
+  postUserReaction
 };
 
 export default UserService;
