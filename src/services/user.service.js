@@ -28,7 +28,7 @@ const postUsertoggleBlock = (userid, isBlocked) => {
 const postUsertoggleWatchlist = (bookid, isAdding) => {
   if(isAdding)
     return axios.post(API_URL_USER + `User/AddToWatchList/${bookid}`,{},{headers: authHeader()})
-  return axios.post(API_URL_USER + `User/RemoveFromWatchList/${bookid}`,{},{headers: authHeader()})
+  return axios.delete(API_URL_USER + `User/RemoveFromWatchList/${bookid}`,{headers: authHeader()})
 };
 
 

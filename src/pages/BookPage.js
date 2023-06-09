@@ -7,45 +7,35 @@ import useUser from "../services/useUser";
 import { Link, redirect, useLoaderData, useParams } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import Reviews from "../components/Reviews";
+import Reactions from "../components/Reactions";
 
 const BookPage = () => {
   const content = useLoaderData();
   
   const [currentUser] = useUser();
+  const [userProfile, setProfile] = useState(null);
   const [isAddedToWatchList, setisAddedToWatchList] = useState(false);
 
   function handleClick () {
-      UserService.postUsertoggleWatchlist(content.id, !isAddedToWatchList)
+      UserService.postUsertoggleWatchlist(content.id, !isAddedToWatchList).then(() => {
+        setisAddedToWatchList(!isAddedToWatchList)
+      })
   }
-
-  function partition(array, filter) { //Might be useful elsewhere as a tool
-    let pass = [], fail = [];
-    array.forEach((e, idx, arr) => (filter(e, idx, arr) ? pass : fail).push(e));
-    return [pass, fail];
-  }
-
-  let [likes, dislikes] = partition(content.reactions, (e) => e["like"])
 
   useEffect(() => {
-    /*
-
-    //let user = AuthService.getCurrentUser();
-    let userProfile = async () => await UserService.getUserProfileById("265582f0-e8f2-4465-b304-3d8926571e3f"); //TODO: change to actual id
-    userProfile = async () => await userProfile.data;
-    console.log(userProfile);
-    let watchList = userProfile.watchList;
-    console.log(watchList);
-    if(watchList.length == 0){
-      setisAddedToWatchList(false);
-    }else{
-      let bookFound = watchList.find((book) => book.id == content.id);
-      if(!bookFound)
-        setisAddedToWatchList(false);
-      else
-        setisAddedToWatchList(true);
+    async function getProfile(){
+      let userProfile = (await UserService.getUserProfileById(currentUser.id)).data
+      setProfile(userProfile)
+      return userProfile
     }
-    */
-  },[])
+
+    if(currentUser){
+      getProfile().then((profile)=>{ //Wait until you have profile, then:
+        let isInWatchlist = profile.watchList.some((book) => book.id == content.id)
+        setisAddedToWatchList(isInWatchlist)
+      })
+    }
+  },[currentUser])
 
   return (
     <div className="container bg-light shadow-lg p-3">
@@ -81,10 +71,7 @@ const BookPage = () => {
         :
         <div>loading</div>}
       <hr className="w-100"/>
-      <Row className="flex-row-reverse px-4">
-        <Button variant="danger" className="w-auto m-1">Dislike <Badge>{dislikes.length}</Badge></Button>
-        <Button variant="success" className="w-auto m-1">Like <Badge>{likes.length}</Badge></Button> 
-      </Row>
+      <Reactions reactions={content.reactions}/>
       <Reviews reviews = {content?.reviews}/>
     </div>
   );
