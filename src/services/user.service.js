@@ -37,7 +37,9 @@ const postUserReaction = (bookId, isRemoving, isLiking) => {
   return axios.post(API_URL_USER + `User/Reaction/${bookId}`,{},{headers: authHeader(), params:{like: isLiking}})
 }
 
-
+const postUserReview = (bookId, reviewText) => {
+  return axios.post(API_URL_USER + `User/Review/${bookId}`,reviewText, {headers: {...authHeader(), 'Content-Type': 'application/json'}})
+}
 
 /*const saveUser = (token) =>{
     decoded = jwtDecode(token);
@@ -50,7 +52,8 @@ const UserService = {
   getUserProfie,
   postUsertoggleBlock,
   postUsertoggleWatchlist,
-  postUserReaction
+  postUserReaction,
+  postUserReview
 };
 
 export default UserService;

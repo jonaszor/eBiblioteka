@@ -21,15 +21,15 @@ const Tags = ({edit}) => {
 
 
   return (
-    <div className="container bg-light pb-5">
-        <Col>
-          <h1>Tags page:</h1>
-          <Container className=" mb-3">
-            {((currentUser?.role == "admin") && !edit) ? 
-              <Link to={"./edit"}><Button>Edit</Button></Link>
-            :
-              <Link to={"./.."}><Button>Return</Button></Link>
-              }
+    <Container className="bg-light pb-5">
+      <Row>
+
+      
+        <Col md={3} className="me-auto">
+          <h1 className="">Tags page:</h1>
+        </Col>
+        <Col md={"auto"}>
+          <Stack className="m-3 ms-auto" direction="horizontal">
             {edit && 
             <fetcher.Form method="POST" action="./../add">
               <input
@@ -38,14 +38,19 @@ const Tags = ({edit}) => {
               />
               <Button variant="success" className="m-2" type="submit">Add</Button>
             </fetcher.Form>
-            
             }
-          </Container>
+
+            {((currentUser?.role == "admin") && !edit) ? 
+              <Link to={"./edit"}><Button>Edit</Button></Link>
+            :
+              <Link to={"./.."}><Button>Return</Button></Link>
+            }
+          </Stack>
         </Col>
         
         {content ? 
           <p>{content.map((tag) => 
-                  <Badge className="ml-3 p-1 border" key={tag.id}>{tag.name}
+                  <Badge className="ms-1 p-1" key={tag.id} bg={edit ? "danger" : "info"}>{tag.name}
                     {edit && <CloseButton variant="white" onClick={() => fetcher.submit(null, {action: "./../delete/"+tag.id, method: "DELETE"})}/>}
                   </Badge>
               )}
@@ -53,7 +58,8 @@ const Tags = ({edit}) => {
         :
         <div>loading</div>
         }
-    </div>
+        </Row>
+    </Container>
   );
 };
 

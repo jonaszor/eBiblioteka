@@ -27,7 +27,6 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function BookEdit({isAdd}){
-    const submit = useSubmit();
     const [content, setContent] = useState(useLoaderData());
     const [suggestions, setSuggestions] = useState({});
     const [currentUser] = useUser();

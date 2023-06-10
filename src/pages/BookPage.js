@@ -72,7 +72,7 @@ const BookPage = () => {
         <div>loading</div>}
       <hr className="w-100"/>
       <Reactions reactions={content.reactions} profile={userProfile} bookId={content.id}/>
-      <Reviews reviews = {content?.reviews}/>
+      <Reviews reviews = {content?.reviews} bookId={content.id}/>
     </div>
   );
 };

@@ -19,14 +19,14 @@ const Books = () => {
             <h5 className="mx-2">{bookData.title}</h5>
             {/*<Button {...(bookData.bookAmount < 1) ? "disabled" : ""} className="float-end mx-1">Zobacz</Button>*/}
         
-            <span className="ml-2">Autorzy: {bookData.authors.map((author) => 
-                <span className="ml-1 p-1 border rounded" key={author.id}>{author.firstname + " " +author.lastname}</span>
+            <span className="ms-2">Autorzy: {bookData.authors.map((author) => 
+                <span className="ms-1 p-1 border rounded" key={author.id}>{author.firstname + " " +author.lastname}</span>
             )}</span>
-            <span className="ml-2">Kategorie: {bookData.categories.map((category) => 
-                <Badge bg="primary" className="ml-1 text-white" key={category.id}>{category.name}</Badge>
+            <span className="ms-5">Kategorie: {bookData.categories.map((category) => 
+                <Badge bg="primary" className="ms-1 text-white" key={category.id}>{category.name}</Badge>
             )}</span>
-            <span className="ml-2">Tagi: {bookData.tags.map((tag) => 
-                <Badge bg="primary" className="ml-1 text-white" key={tag.id}>{tag.name}</Badge>
+            <span className="ms-5">Tagi: {bookData.tags.map((tag) => 
+                <Badge bg="primary" className="ms-1 text-white" key={tag.id}>{tag.name}</Badge>
             )}</span>
             <p className="m-3">Opis: {bookData.description}</p>
           </Col>
