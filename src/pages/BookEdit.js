@@ -8,6 +8,7 @@ import { useForm, FormProvider, Controller } from "react-hook-form";
 import { useState,useEffect } from "react";
 import { ReactTags } from "react-tag-autocomplete";
 import BookService from "../services/book.service";
+import ConfirmationWindow from "../components/ConfirmationWindow";
 
 const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -31,6 +32,7 @@ export default function BookEdit({isAdd}){
     const [suggestions, setSuggestions] = useState({});
     const [currentUser] = useUser();
     const params = useParams();
+    const [confirmation, setConfirmation] = useState({show: false, content: "", onConfirm: ()=>{}})
 
     const {
         register,
@@ -50,34 +52,44 @@ export default function BookEdit({isAdd}){
       });
 
     function onSubmit(data){
-        data.authorsId = data.authors?.map((x) => x.value);
-        data.categoriesId = data.categories?.map((x) => x.value);
-        data.tagsId = data.tags?.map((x) => x.value);
-        console.log(data)
-        console.log(JSON.stringify(data))
-        if(isAdd)
-            BookService.addBook(data).then((response) => {
-                if(response.status < 400){
-                    alert("Książka została dodana");
-                }
-                else{
-                    alert("Książka nie mogła zostać dodana: "+response.data)
-                }
-            });
-            //submit(data, {method: "POST"})
-        else
-            BookService.editBookbyId(params.id, data).then((response) => {
-                if(response.status < 400){
-                    alert("Książka została zedytowana");
-                }
-                else{
-                    alert("Książka nie mogła zostać zedytowana: "+response.data)
-                };
-            })
-            //submit(data, {method: "PATCH"})
-    }
+        function onConfirm(data){
+                data = data //Przez to zaczęło działać???
+                data.authorsId = data.authors?.map((x) => x.value);
+                data.categoriesId = data.categories?.map((x) => x.value);
+                data.tagsId = data.tags?.map((x) => x.value);
+                console.log(data)
+                //console.log(JSON.stringify(data))
+                if(isAdd)
+                    BookService.addBook(data).then((response) => {
+                        if(response.status < 400){
+                            alert("Książka została dodana");
+                        }
+                        else{
+                            alert("Książka nie mogła zostać dodana: "+response.data)
+                        }
+                    }).finally(() => setConfirmation({...confirmation, show: false}));
+                    //submit(data, {method: "POST"})
+                else
+                    BookService.editBookbyId(params.id, data).then((response) => {
+                        if(response.status < 400){
+                            alert("Książka została zedytowana");
+                        }
+                        else{
+                            alert("Książka nie mogła zostać zedytowana: "+response.data)
+                        };
+                    }).finally(() => setConfirmation({...confirmation, show: false}));
+                    //submit(data, {method: "PATCH"})
+            }
+        setConfirmation({
+            show: true,
+            content: "Wprowadzone dane są poprawne?",
+            onConfirm: () => onConfirm(data)
+        })
+      }
 
-    console.log(errors)
+    
+
+    //console.log(errors)
 
     useEffect(()=>{ //load all tags, authors, categories for suggestions. 
         const fetchData = async () => {
@@ -135,6 +147,7 @@ export default function BookEdit({isAdd}){
 
     return(
         <div className="container bg-light shadow-lg">
+            <ConfirmationWindow {...confirmation} onClose={() => setConfirmation({...confirmation, show: false})}/>
       <Link to={"./.."}>{"<< Powrót"}</Link>
         {(content || isAdd) ?  
         <form onSubmit={handleSubmit(onSubmit)}>

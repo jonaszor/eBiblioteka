@@ -14,7 +14,7 @@ export default function Reactions({reactions, profile, bookId}){ //Works, but th
       }
     
     let [likes, dislikes] = partition(reactions, (e) => e["like"])
-    console.log(reactions)
+    //console.log(reactions)
 
     useEffect(()=>{
         if(profile){
