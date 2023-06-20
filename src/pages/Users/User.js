@@ -11,16 +11,89 @@ const User = () => {
   const content = useLoaderData();
   const [currentUser] = useUser();
   const [isAccountBlocked, setisAccountBlocked] = useState(false);
+  const [getWatchList, setWatchList] = useState([]);
+  const [getCurrentUserProfile, setCurrentUserProfile] = useState({});
+
+  const isAddedToWatchList = async (id) => {
+    console.log("isAddedToWatchList", getCurrentUserProfile)
+    return getCurrentUserProfile.watchList.find((element) => element.id == id);
+  }
   
 
   useEffect(() => {
-    setisAccountBlocked(content.isAccountBlocked);
+    
   },[])
 
-  async function handleClick (){
+  useEffect(() => {
+    setWatchList(content.watchList);
+    setisAccountBlocked(content.isAccountBlocked);
+    async function getProfile(){
+      let userProfile = (await UserService.getUserProfileById(currentUser.id)).data
+      return userProfile
+    }
+
+    if(currentUser){
+      getProfile().then((profile)=>{ //Wait until you have profile, then. Maybe the watchlist part should be moved to a seperate component
+        console.log(profile);
+        setCurrentUserProfile(profile)
+      })
+    }
+  },[currentUser])
+
+  async function handleClickBlockAcc (){
     await UserService.postUsertoggleBlock(content.id, isAccountBlocked);
     setisAccountBlocked(!isAccountBlocked);
   }
+
+  async function handleClickAddToWatchlist(event){
+    let id = event.target.id;
+    UserService.postUsertoggleWatchlist(id, isAddedToWatchList(id)).then(() => {
+      
+    });
+  }
+
+  function WatchList({userData}){
+    return(
+      getWatchList && getWatchList.length != 0 && getWatchList.map((book) => 
+        <Row md={1} style={{minHeight: "4vh"}}>
+          <Col md={1} xs={2} className="mx-auto text-align: center; ">
+            <Link to={`/books/${book.id}`} className="text-decoration-none" >
+              <Image src={book.imageUrl} thumbnail fluid className="mx-2 p-1 mh-50 mx-auto" style={{maxHeight: "10vh"}}/>
+            </Link>
+          </Col>
+          <Col fluid={"true"} md={9} xs={6} className="mx-auto">
+            <h4 className="mt-2">{book.title}</h4>
+          </Col>
+        </Row>
+    ))
+  }
+  /*
+  <Col fluid={"true"} md={2} xs={4}>
+            <Link to={`/books/${book.id}`} className="text-decoration-none" ><Button className="mx-auto">Zobacz</Button></Link>
+          </Col>*/
+
+  function UserDetails({userData}){
+    return(
+      <Row>
+        
+        <Col sm={12} xs={12}>
+          <hr/>
+          <h4>WatchList:</h4>
+          <WatchList userData={userData}></WatchList>
+        </Col>
+        
+        <Col sm={12} xs={12}>
+          <hr/>
+          <h4>Reviews:</h4>
+          <WatchList userData={userData}></WatchList>
+        </Col>
+      </Row>
+    )
+  }
+/*<Col md={2}>
+          {currentUser && <Button id={book.id} itemID={book.id} variant={isAddedToWatchList(book.id) ? "danger" : "success"} onClick={handleClickAddToWatchlist}>{isAddedToWatchList(book.id) ? "Usun z watchlisty" : "Dodaj do watchlisty"}</Button>}
+          </Col>*/
+  
 
   function UserEntryAsAdmin({userData}){
     console.log(userData);
@@ -47,28 +120,12 @@ const User = () => {
                 </Row>
                 <Row className="mt-2 mx-auto">
                   <Col md={8} className="mx-auto">
-                  {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button variant={isAccountBlocked ? "danger" : "success"} onClick={handleClick}>{isAccountBlocked ? "Zablokuj" : "Odblokuj"}</Button></Link>}
+                  {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button variant={isAccountBlocked ? "danger" : "success"} onClick={handleClickBlockAcc}>{isAccountBlocked ? "Zablokuj" : "Odblokuj"}</Button></Link>}
                   </Col>
                 </Row>
               </Col>
             </Row>
-            <Row md={3}>
-              <Col md={2}>
-              </Col>
-              <Col fluid={"true"} md={9}>
-                {userData.watchList && userData.watchList.length != 0 && userData.watchList.map((book) => 
-                    <p>
-                      <ul>
-                        <li>[{book.id}] {book.title}</li>
-                        <li>{book.imageUrl}</li>
-                      </ul>
-                    </p>
-                    
-                )}
-              </Col>
-              <Col md={1}>
-              </Col>
-            </Row>
+            <UserDetails userData={userData}/>
           </div>
         </div>
     )
@@ -94,24 +151,7 @@ const User = () => {
                 <Link to={`/users`}><Button className="mx-auto">Powrót</Button></Link>
               </Col>
             </Row>
-            <Row md={3}>
-              <Col md={2}>
-              </Col>
-              <Col fluid={"true"} md={9}>
-                {userData.watchList && userData.watchList.length != 0 && userData.watchList.map((book) => 
-                    <p>
-                      <ul>
-                        <li>[{book.id}] {book.title}</li>
-                        <li>{book.imageUrl}</li>
-                      </ul>
-                    </p>
-                    
-                )}
-              </Col>
-              <Col md={1}>
-              </Col>
-            </Row>
-            
+            <UserDetails userData={userData}/>
           </div>
       </div>
     )
@@ -137,23 +177,7 @@ const User = () => {
                 <Link to={`/users`}><Button className="mx-auto">Powrót</Button></Link>
               </Col>
             </Row>
-            <Row md={3}>
-              <Col md={2}>
-              </Col>
-              <Col fluid={"true"} md={9}>
-                {userData.watchList && userData.watchList.length != 0 && userData.watchList.map((book) => 
-                    <p>
-                      <ul>
-                        <li>[{book.id}] {book.title}</li>
-                        <li>{book.imageUrl}</li>
-                      </ul>
-                    </p>
-                    
-                )}
-              </Col>
-              <Col md={1}>
-              </Col>
-            </Row>
+            <UserDetails userData={userData}/>
           </div>
       </div>
     )

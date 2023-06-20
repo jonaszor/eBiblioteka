@@ -1,7 +1,6 @@
 {
   "name": "ebiblioteka",
   "version": "0.1.0",
-  "homepage": "https://jonaszor.github.io/eBiblioteka",
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",

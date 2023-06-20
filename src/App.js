@@ -7,7 +7,7 @@ import bgImage from './bg.jpg';
 import AuthService from "./services/auth.service";
 import NavBarScroll from "./components/Navbar";
 
-const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:3000/eBiblioteka`;
+const PUBLIC_URL = process.env.PUBLIC_URL || ``;
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
