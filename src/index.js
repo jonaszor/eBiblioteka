@@ -116,7 +116,7 @@ const router = createBrowserRouter(
         </Route>
       </Route>
   ),{
-    basename: "/eBiblioteka",
+    //basename: "/eBiblioteka",
   }
 )
 
