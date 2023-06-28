@@ -51,6 +51,10 @@ const postPay = (userId, debtValue) => {
   return axios.post(API_URL_USER + `User/${userId}/Pay`, "" + debtValue, {headers: {...authHeader(), 'Content-Type': 'application/json'}})
 }
 
+const patchUser = (userId, data) => {
+  return axios.patch(API_URL_USER + `User/${userId}`, data, {headers: authHeader()})
+}
+
 /*const saveUser = (token) =>{
     decoded = jwtDecode(token);
     localStorage.setItem("user", JSON.stringify(response.data));
@@ -65,7 +69,8 @@ const UserService = {
   postUserReaction,
   postUserReview,
   deleteReview,
-  postPay
+  postPay, 
+  patchUser
 };
 
 export default UserService;

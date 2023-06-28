@@ -3,6 +3,9 @@ import { Image, Badge, Button, Container, Row, Col, Stack, Form } from "react-bo
 
 import BookService from "../../services/book.service";
 import { Link, useLoaderData } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from 'yup';
+import { useForm} from "react-hook-form";
 
 import useUser from "../../services/useUser";
 import UserService from "../../services/user.service";
@@ -158,36 +161,74 @@ const User = () => {
   }
 
   function EditSection({userData}){
+
+    const validationSchema = Yup.object().shape({
+        firstName: Yup.string()
+            .min(3,"Name is too short")
+            .required("Name is required"),
+        lastName: Yup.string()
+            .min(3,"Name is too short")
+            .required("Name is required"),
+        description: Yup.string().
+            nullable(),
+    })
+
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      resolver: yupResolver(validationSchema),
+      defaultValues: userData
+    });
+
+    function onSubmit(data){
+      let dataToSend = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        description: (data.description == null) ? ("") : (data.description)
+      }
+      UserService.patchUser(userData.id, dataToSend).then((response) => {
+        if(response.status < 400){
+            alert("Dane zostały zmienione");
+        }
+        else{
+            alert("Dane nie mogły zostać zmienione: "+response.data)
+        }
+    })
+      console.log(dataToSend)
+    }
+
     return(
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Row className="w-100 my-1">
           <input
               name="firstName"
+              {...register('firstName')}
               type="text"
-              className={"form-control"}
-              placeholder="Fist name"
-              defaultValue={userData.firstName}
+              className={"form-control " + (errors.firstName ? 'is-invalid' : '')}
+              placeholder="First name"
           />
-          <div className="invalid-feedback"></div>
+          <div className="invalid-feedback">{errors.firstName?.message}</div>
         </Row>
         <Row className="w-100 my-1">
           <input
               name="lastName"
+              {...register('lastName')}
               type="text"
-              className={"form-control"}
+              className={"form-control " + (errors.lastName ? 'is-invalid' : '')}
               placeholder="Last name"
-              defaultValue={userData.lastName}
           />
-          <div className="invalid-feedback"></div>
+          <div className="invalid-feedback">{errors.lastName?.message}</div>
         </Row>
         <Row className="w-100 my-1">
           <textarea
             name="description"
-            className={"form-control"}
+            {...register('description')}
+            className={"form-control " + (errors.description ? 'is-invalid' : '')}
             placeholder="Description"
-            defaultValue={userData.description}
           />
-          <div className="invalid-feedback"></div>  
+          <div className="invalid-feedback">{errors.description?.message}</div>  
         </Row>
         <Row className="w-100 my-1">
           <Col className="my-1">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useActionData, useLoaderData } from "react-router-dom";
 import useUser from "../services/useUser";
 import { Stack, Button, Row, Col, CloseButton, Badge, Container } from "react-bootstrap";
 import { Link, useFetcher } from "react-router-dom";
@@ -15,7 +15,6 @@ const Tags = ({edit}) => {
       //setContent(fetcher.data)
     }
   }, [fetcher]);
-
 
   return (
     <Container className="bg-light pb-5">
@@ -49,7 +48,10 @@ const Tags = ({edit}) => {
           <p>{content.map((tag) => 
               <Link key={tag.id} to={!edit && "../books?tag="+tag.id}>
                 <Badge className="ms-1 p-1"  bg={edit ? "danger" : "info"}>{tag.name}
-                  {edit && <CloseButton variant="white" onClick={() => fetcher.submit(null, {action: "./../delete/"+tag.id, method: "DELETE"})}/>}
+                  {edit && <CloseButton variant="white" onClick={() => {
+                    fetcher.submit(null, {action: "./../delete/"+tag.id, method: "DELETE"})
+                    setContent(content.filter(el => el.id != tag.id))
+                  }}/>}
                 </Badge>
               </Link>    
               )}
