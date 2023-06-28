@@ -1,20 +1,21 @@
-import {React, StrictMode} from "react";
+import {React} from "react";
 import {createRoot} from "react-dom/client";
-import { Routes, Route,  Link, Outlet, Navigate, createBrowserRouter, createRoutesFromElements, RouterProvider, json} from "react-router-dom";
+import { Route, Outlet, Navigate, createBrowserRouter, createRoutesFromElements, RouterProvider} from "react-router-dom";
 
 import App from "./App";
-import * as serviceWorker from "./serviceWorker";
 
 import AuthService from "./services/auth.service";
 import BookService from "./services/book.service";
 import UserService from "./services/user.service";
+import NewsService from "./services/news.service";
 
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import News from "./pages/News";
+import NewsEdit from "./pages/NewsEdit";
 import Profile from "./pages/Profile";
-import BoardUser from "./pages/BoardUser";
 import BoardModerator from "./pages/BoardModerator";
 import BoardAdmin from "./pages/BoardAdmin";
 
@@ -49,7 +50,10 @@ const root = createRoot(document.getElementById("root"));
 const router = createBrowserRouter(
   createRoutesFromElements(
       <Route element={<App/>} errorElement={<ErrorPage/>}>
-        <Route path="/" element={<Home/>} />
+        <Route path="/" 
+          element={<Home/>} 
+          loader={async () => (await NewsService.getNewsList()).data}
+        />
         <Route path="books" 
           element={<Books/>} 
           loader={async () => (await BookService.getBooks()).data}
@@ -142,6 +146,13 @@ const router = createBrowserRouter(
         </Route>
         <Route element={<ProtectedRoute isAllowed={currentUser  && (currentUser.role == "employee" || currentUser.role == "admin")}/>}>
           <Route path="mod" element={<BoardModerator/>} />
+          <Route path="news/add" element={<News/>} />
+          <Route path="news/:id" 
+            element={<NewsEdit/>} 
+            loader={async ({params}) => {
+              return (await NewsService.getNewsById(params.id)).data
+            }}
+          />
         </Route>
         <Route element={<ProtectedRoute isAllowed={currentUser && currentUser.role == "admin"}/>}>
           <Route path="admin" element={<BoardAdmin/>} />
