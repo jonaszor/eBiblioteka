@@ -27,6 +27,14 @@ const getCategories = () => {
   return axios.get(API_URL_BOOK + "/Category");
 };
 
+const postCategories = (categoryName)=>{
+  return axios.post(API_URL_BOOK + "/Category", categoryName ,{headers: {...authHeader(), 'Content-Type': 'application/json'} })
+}
+
+const deleteCategories = (categoryId)=>{
+  return axios.delete(API_URL_BOOK + "/Category/"+categoryId,{headers: {...authHeader()} })
+}
+
 const getTags = () => {
   return axios.get(API_URL_BOOK + "/Tag");
 };
@@ -39,9 +47,26 @@ const deleteTag = (tagId)=>{
   return axios.delete(API_URL_BOOK + "/Tag/"+tagId,{headers: {...authHeader()} })
 }
 
+const bookUpdateTagsById = (bookId, tagObject) => {
+   return axios.delete(API_URL_BOOK + "/Book/"+ bookId +"/RemoveTags", {headers: {...authHeader()}, data: tagObject.oldTags})
+   .then(axios.post(API_URL_BOOK + "/Book/"+ bookId +"/AddToTags", tagObject.newTags, {headers: {...authHeader()} }))
+   .then(axios.delete(API_URL_BOOK + "/Book/"+ bookId +"/RemoveCategories", {headers: {...authHeader()}, data: tagObject.oldCategories}))
+   .then(axios.post(API_URL_BOOK + "/Book/"+ bookId +"/AddToCategories", tagObject.newCategories, {headers: {...authHeader()} }))
+   .then(axios.delete(API_URL_BOOK + "/Book/"+ bookId +"/RemoveAuthors", {headers: {...authHeader()}, data: tagObject.oldAuthors}))
+   .then(axios.post(API_URL_BOOK + "/Book/"+ bookId +"/AddAuthors", tagObject.newAuthors, {headers: {...authHeader()} }))
+}
+
 const getAuthors = () => {
   return axios.get(API_URL_BOOK + "/Author");
 };
+
+const postAuthor = (firstName, lastName)=>{
+  return axios.post(API_URL_BOOK + "/Author", {firstName, lastName} ,{headers: {...authHeader(), 'Content-Type': 'application/json'} })
+}
+
+const deleteAuthor = (authorId)=>{
+  return axios.delete(API_URL_BOOK + "/Author/"+authorId,{headers: {...authHeader()} })
+}
 
 const getUserBoard = () => {
   return axios.get(API_URL_BOOK + "user", { headers: authHeader() });
@@ -66,8 +91,11 @@ const BookService = {
   getBookbyId,
   editBookbyId,
   addBook,
+  bookUpdateTagsById,
   categories:{
     getCategories,
+    postCategories,
+    deleteCategories
   },
   tags:{
     getTags,
@@ -76,6 +104,8 @@ const BookService = {
   },
   authors:{
     getAuthors,
+    postAuthor,
+    deleteAuthor
   },
   getUserBoard,
   getModeratorBoard,

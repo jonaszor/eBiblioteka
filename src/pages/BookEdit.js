@@ -24,7 +24,7 @@ const validationSchema = Yup.object().shape({
         .required("A cover image link is required"),
     bookAmount: Yup.number()
         .min(1,"You need to add at least one book"),
-    pdfUrl: Yup.string()
+    pdfUrl: Yup.string().nullable()
 })
 
 export default function BookEdit({isAdd}){
@@ -46,7 +46,7 @@ export default function BookEdit({isAdd}){
             ...content, 
             authors: content["authors"].map((author)=>({value: author.id, label: author.firstname + " " + author.lastname})),
             categories: content["categories"].map((item) => ({value: item.id, label: item.name})),
-            tag: content["tags"].map((item) => ({value: item.id, label: item.name})),
+            tags: content["tags"].map((item) => ({value: item.id, label: item.name})),
             authorsId: [], categoriesId: [], tagsId: []
         }
       });
@@ -58,6 +58,7 @@ export default function BookEdit({isAdd}){
                 data.categoriesId = data.categories?.map((x) => x.value);
                 data.tagsId = data.tags?.map((x) => x.value);
                 console.log(data)
+                console.log(content)
                 //console.log(JSON.stringify(data))
                 if(isAdd)
                     BookService.addBook(data).then((response) => {
@@ -69,15 +70,34 @@ export default function BookEdit({isAdd}){
                         }
                     }).finally(() => setConfirmation({...confirmation, show: false}));
                     //submit(data, {method: "POST"})
-                else
+                else{
                     BookService.editBookbyId(params.id, data).then((response) => {
                         if(response.status < 400){
-                            alert("Książka została zedytowana");
+                            let tagObject = {
+                                oldTags: content.tags.map(el => el.id).filter(el => !data.tagsId.includes(el)),
+                                newTags: data.tagsId.filter(el => !content.tags.map(el => el.id).includes(el)),
+                                oldCategories: content.categories.map(el => el.id).filter(el => !data.categoriesId.includes(el)), 
+                                newCategories: data.categoriesId.filter(el => !content.categories.map(el => el.id).includes(el)),
+                                oldAuthors: content.authors.map(el => el.id).filter(el => !data.authorsId.includes(el)),
+                                newAuthors: data.authorsId.filter(el => !content.authors.map(el => el.id).includes(el))
+                            }
+                            console.log(tagObject)
+                            
+                            BookService.bookUpdateTagsById(params.id, tagObject).then((response) => {
+                                if(response.status < 400){
+                                    alert("Książka została zedytowana");
+                                }
+                                else{
+                                    alert("Tagi nie mogły zostać zedytowane: "+response.data)
+                                }
+                            })
                         }
                         else{
                             alert("Książka nie mogła zostać zedytowana: "+response.data)
                         };
                     }).finally(() => setConfirmation({...confirmation, show: false}));
+                }
+
                     //submit(data, {method: "PATCH"})
             }
         setConfirmation({

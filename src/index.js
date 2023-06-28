@@ -73,9 +73,14 @@ const router = createBrowserRouter(
               return (await BookService.addBook(data)).data}}
           />
         </Route>
-        <Route path="author" element={<Authors/>} />
+        <Route path="author" element={<Authors/>} 
+          loader={async () => (await BookService.authors.getAuthors()).data}
+        />
         <Route path="tag" element={<Tags/>}
           loader={async () => (await BookService.tags.getTags()).data}
+        />
+        <Route path="category" element={<Categories/>} 
+          loader={async () => (await BookService.categories.getCategories()).data}
         />
         <Route element={<ProtectedRoute isAllowed={currentUser && currentUser.role == "admin"}/>}>
           <Route path="tag/edit" element={<Tags edit={true}/>}
@@ -91,8 +96,35 @@ const router = createBrowserRouter(
               let formData = await request.formData();
               return await BookService.tags.postTag(formData.get("tagName"))}}
           />
+
+          <Route path="author/edit" element={<Authors edit={true}/>}
+            loader={async () => (await BookService.authors.getAuthors()).data}
+          />
+          <Route path="author/delete/:id"
+            action={async ({params}) => {
+              return await BookService.authors.deleteAuthor(params.id)
+            }}
+          />
+          <Route path="author/add"
+            action={async ({params, request}) => {
+              let formData = await request.formData();
+              return await BookService.authors.postAuthor(formData.get("firstName"), formData.get("lastName"))}}
+          />
+
+          <Route path="category/edit" element={<Categories edit={true}/>}
+            loader={async () => (await BookService.categories.getCategories()).data}
+          />
+          <Route path="category/delete/:id"
+            action={async ({params}) => {
+              return await BookService.categories.deleteCategories(params.id)
+            }}
+          />
+          <Route path="category/add"
+            action={async ({params, request}) => {
+              let formData = await request.formData();
+              return await BookService.categories.postCategories(formData.get("categoryName"))}}
+          />
         </Route>
-        <Route path="category" element={<Categories/>} />
         <Route path="login" element={<Login/>} />
         <Route path="register" element={<Register/>} />
         <Route element={<ProtectedRoute isAllowed={!!currentUser}/>}>

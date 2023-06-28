@@ -14,6 +14,7 @@ export default function Reactions({reactions, profile, bookId}){ //Works, but th
       }
     
     let [likes, dislikes] = partition(reactions, (e) => e["like"])
+    let [likeAmnt, dislikeAmnt] = [likes.length + (hasLiked?1:0), dislikes.length + (hasDisliked?1:0)]
     //console.log(reactions)
 
     useEffect(()=>{
@@ -21,7 +22,7 @@ export default function Reactions({reactions, profile, bookId}){ //Works, but th
             let currentReaction = profile.reactions.find((reaction) => reaction.bookId == bookId)
             if(currentReaction){
                 if(currentReaction.like){
-                setLiked(true)
+                    setLiked(true)
                 }
                 else{
                     setDisliked(true)
@@ -58,8 +59,8 @@ export default function Reactions({reactions, profile, bookId}){ //Works, but th
 
     return(
     <Row className="flex-row-reverse px-4">
-        <Button onClick={onDislike} variant={hasDisliked? "danger":"outline-danger"} disabled={!profile} className="w-auto m-1">Dislike <Badge>{dislikes.length}</Badge></Button>
-        <Button onClick={onLike} variant={hasLiked? "success": "outline-success"} disabled={!profile} className="w-auto m-1">Like <Badge>{likes.length}</Badge></Button> 
+        <Button onClick={onDislike} variant={hasDisliked? "danger":"outline-danger"} disabled={!profile} className="w-auto m-1">Dislike <Badge>{dislikeAmnt}</Badge></Button>
+        <Button onClick={onLike} variant={hasLiked? "success": "outline-success"} disabled={!profile} className="w-auto m-1">Like <Badge>{likeAmnt}</Badge></Button> 
     </Row>
     )
 }
