@@ -41,6 +41,16 @@ const postUserReview = (bookId, reviewText) => {
   return axios.post(API_URL_USER + `User/Review/${bookId}`,reviewText, {headers: {...authHeader(), 'Content-Type': 'application/json'}})
 }
 
+const deleteReview = (bookId, userId) => {
+  //console.log("Axios:", bookId,userId )
+  return axios.delete(API_URL_USER + `User/Review/${bookId}?userId=${userId}`, {headers: authHeader()})
+}
+
+const postPay = (userId, debtValue) => {
+  //console.log("Axios:", bookId,userId )
+  return axios.post(API_URL_USER + `User/${userId}/Pay`, "" + debtValue, {headers: {...authHeader(), 'Content-Type': 'application/json'}})
+}
+
 /*const saveUser = (token) =>{
     decoded = jwtDecode(token);
     localStorage.setItem("user", JSON.stringify(response.data));
@@ -53,7 +63,9 @@ const UserService = {
   postUsertoggleBlock,
   postUsertoggleWatchlist,
   postUserReaction,
-  postUserReview
+  postUserReview,
+  deleteReview,
+  postPay
 };
 
 export default UserService;

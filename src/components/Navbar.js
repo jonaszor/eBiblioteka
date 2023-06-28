@@ -11,7 +11,7 @@ export default function Navbar({user}){
     return(
         <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand ms-3">
-          E-Biblioteka v2
+          E-Biblioteka
         </Link>
         <div className="navbar-nav me-auto">
 
@@ -57,7 +57,7 @@ export default function Navbar({user}){
         {user ? (
           <div className="navbar-nav ms-auto">
             <li className="nav-item">
-              <NavLink to={"/profile"} className="nav-link">
+              <NavLink to={`/user/${user.id}/profile`} className="nav-link">
                 {user.email}
               </NavLink>
             </li>

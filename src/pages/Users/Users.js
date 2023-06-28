@@ -17,17 +17,17 @@ const Users = () => {
               <Col md={2}>
                 <Image src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" thumbnail className="mx-2 img-thumbnail" style={{maxHeight: "150px"}}/>
               </Col>
-              <Col fluid={"true"} md={8}>
+              <Col fluid={"true"} md={7}>
                 <h5 className="">{userData.email} [{(userData.isAccountBlocked == false) && <b style={{color: "#AB2328"}}>Blocked</b>}{(userData.isAccountBlocked == true) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
                 <p className="m-0">First & Last name: <b>{userData.firstName} {userData.lastName}</b></p>
                 <p className="m-0">Debt: {(userData.amountToPay != 0) && <b style={{color: "#AB2328"}}>{userData.amountToPay} zł</b>} {(userData.amountToPay == 0) && "-"}</p>
                 {(userData.description) && <p className="m-0">Description: {userData.description}</p>}
                 
               </Col>
-              <Col md={2}>
+              <Col md={3}>
                 <Row className="mx-auto">
                   <Col md={8} className="mx-auto">
-                  {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button>Manage</Button></Link>}
+                  {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button>Manage <i class="fa-solid fa-user-pen"></i></Button></Link>}
                   </Col>
                 </Row>
               </Col>
@@ -50,8 +50,8 @@ const Users = () => {
                 <p className="m-0">Watchlist: {userData.watchList.length}</p>
                 
               </Col>
-              <Col md={1}>
-                <Link to={`/user/${userData.id}/profile`}><Button className="mx-1">Profile</Button></Link>
+              <Col md={2}>
+                <Link to={`/user/${userData.id}/profile`}><Button className="mx-1">Profile <i class="fa-solid fa-user"></i></Button></Link>
               </Col>
             </Row>
           </div>
