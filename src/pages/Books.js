@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Image, Badge, Row, Col, Button,Accordion } from "react-bootstrap";
 
 import BookService from "../services/book.service";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useSearchParams } from "react-router-dom";
 import useUser from "../services/useUser";
 import { Form, useForm } from "react-hook-form";
 import MyTagsInput from "../components/MyTagsInput";
@@ -16,6 +16,7 @@ const Books = () => {
     categories: [],
     authors: []
   });
+
 
   function filterCondition(book){
     if(book.title.includes(filters.title) == false)
@@ -69,6 +70,30 @@ const Books = () => {
 function Search({currentFilter, setFilter}){
   const [suggestions, setSuggestions] = useState({});
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(()=>{
+    async function updateFilterFromBar(){
+      if(searchParams.size > 0 && suggestions?.tags){
+        let currentFilter = {...filters};
+        if (searchParams.get("tag")) {
+          console.log(suggestions)
+          currentFilter.tags = suggestions.tags.filter(el => el.value == searchParams.get("tag"))
+        }
+        if (searchParams.get("category")) {
+          currentFilter.categories = suggestions.categories.filter(el => el.value == searchParams.get("category"))
+        }
+        if (searchParams.get("author")) {
+          currentFilter.authors = suggestions.authors.filter(el => el.value == searchParams.get("author"))
+        }
+        setFilters(currentFilter)
+        setSearchParams() //Hack to stop infinite loop
+        console.log(currentFilter)
+      }
+    }
+    updateFilterFromBar();
+  },[searchParams, suggestions])
+
   const {
         register,
         handleSubmit,
@@ -110,6 +135,14 @@ function Search({currentFilter, setFilter}){
 
 function handleSearch(data){
   console.log(data)
+  /*
+  setSearchParams({
+    title: data.title,
+    authors: data.authors.map(el=>el.value)
+  })
+  console.log(searchParams)
+  */
+  setSearchParams()
   setFilter(data)
 }
 
@@ -158,6 +191,7 @@ return(
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
+    
   </form>
 )
 }

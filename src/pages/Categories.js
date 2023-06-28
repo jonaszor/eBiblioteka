@@ -1,40 +1,64 @@
 import React, { useState, useEffect } from "react";
+import { useLoaderData } from "react-router-dom";
+import useUser from "../services/useUser";
+import { Stack, Button, Row, Col, CloseButton, Badge, Container } from "react-bootstrap";
+import { Link, useFetcher } from "react-router-dom";
 
-import BookService from "../services/book.service";
-
-const Categories = () => {
-  const [content, setContent] = useState("");
+const Categories = ({edit}) => {
+  const [content, setContent] = useState(useLoaderData());
+  const [currentUser] = useUser();
+  const fetcher = useFetcher();
 
   useEffect(() => {
-    BookService.getCategories().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
+    if (fetcher.state === "idle" && !fetcher.data) {
+      fetcher.load(".")
+      //setContent(fetcher.data)
+    }
+  }, [fetcher]);
 
-        setContent(_content);
-      }
-    );
-  }, []);
 
   return (
-    <div className="container">
-      <header className="jumbotron">
-        <h1>Categories page:</h1>
+    <Container className="bg-light pb-5">
+      <Row>
+
+      
+        <Col md={3} className="me-auto">
+          <h1 className="">Categories page:</h1>
+        </Col>
+        <Col md={"auto"}>
+          <Stack className="m-3 ms-auto" direction="horizontal">
+            {edit && 
+            <fetcher.Form method="POST" action="./../add">
+              <input
+                name="categoryName"
+                required
+              />
+              <Button variant="success" className="m-2" type="submit">Add</Button>
+            </fetcher.Form>
+            }
+
+            {((currentUser?.role == "admin") && !edit) ? 
+              <Link to={"./edit"}><Button>Edit</Button></Link>
+            :
+              <Link to={"./.."}><Button>Return</Button></Link>
+            }
+          </Stack>
+        </Col>
+        
         {content ? 
           <p>{content.map((category) => 
-                  <span className="ml-1 p-1 border rounded btn-info" key={category.id}>{category.name}</span>
+              <Link key={category.id} to={!edit && "../books?category="+category.id}>
+                <Badge className="ms-1 p-1"  bg={edit ? "danger" : "info"}>{category.name}
+                  {edit && <CloseButton variant="white" onClick={() => fetcher.submit(null, {action: "./../delete/"+category.id, method: "DELETE"})}/>}
+                </Badge>
+              </Link>    
               )}
           </p>
         :
         <div>loading</div>
         }
-      </header>
-    </div>
+        </Row>
+    </Container>
   );
 };
 
