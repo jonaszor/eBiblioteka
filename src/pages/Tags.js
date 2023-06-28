@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import useUser from "../services/useUser";
 import { Stack, Button, Row, Col, CloseButton, Badge, Container } from "react-bootstrap";
-import { Link, Form, useSubmit, useFetcher } from "react-router-dom";
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { Link, useFetcher } from "react-router-dom";
 
 const Tags = ({edit}) => {
   const [content, setContent] = useState(useLoaderData());
@@ -50,9 +47,11 @@ const Tags = ({edit}) => {
         
         {content ? 
           <p>{content.map((tag) => 
-                  <Badge className="ms-1 p-1" key={tag.id} bg={edit ? "danger" : "info"}>{tag.name}
-                    {edit && <CloseButton variant="white" onClick={() => fetcher.submit(null, {action: "./../delete/"+tag.id, method: "DELETE"})}/>}
-                  </Badge>
+              <Link key={tag.id} to={!edit && "../books?tag="+tag.id}>
+                <Badge className="ms-1 p-1"  bg={edit ? "danger" : "info"}>{tag.name}
+                  {edit && <CloseButton variant="white" onClick={() => fetcher.submit(null, {action: "./../delete/"+tag.id, method: "DELETE"})}/>}
+                </Badge>
+              </Link>    
               )}
           </p>
         :
