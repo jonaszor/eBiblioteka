@@ -108,7 +108,7 @@ const BookPage = () => {
 
   return (
     <div className="container bg-light shadow-lg p-3">
-      <Link to={"./.."}>{"<< Powrót"}</Link>
+      <Link to={"./.."}><Button>Back <i class="fa-solid fa-circle-chevron-left"></i></Button></Link>
         {content ?  
         <Container className="border p-3" fluid>
           <Row md={3}>

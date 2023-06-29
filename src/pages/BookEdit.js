@@ -168,7 +168,7 @@ export default function BookEdit({isAdd}){
     return(
         <div className="container bg-light shadow-lg">
             <ConfirmationWindow {...confirmation} onClose={() => setConfirmation({...confirmation, show: false})}/>
-      <Link to={"./.."}>{"<< Powrót"}</Link>
+            <Link to={"./.."}><Button>Back <i class="fa-solid fa-circle-chevron-left"></i></Button></Link>
         {(content || isAdd) ?  
         <form onSubmit={handleSubmit(onSubmit)}>
             <Container className="border p-3" fluid>
