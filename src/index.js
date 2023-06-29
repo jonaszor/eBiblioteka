@@ -52,7 +52,14 @@ const router = createBrowserRouter(
       <Route element={<App/>} errorElement={<ErrorPage/>}>
         <Route path="/" 
           element={<Home/>} 
-          loader={async () => (await NewsService.getNewsList()).data}
+          loader={async () =>{
+            try{
+              return (await NewsService.getNewsList()).data
+            }catch(error){
+              return []
+            }
+            
+          }}
         />
         <Route path="books" 
           element={<Books/>} 
