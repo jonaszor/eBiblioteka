@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Image, Badge, Button, Container, Row, Col, Stack, Form } from "react-bootstrap";
 
-import BookService from "../../services/book.service";
+import BorrowService from "../../services/borrow.service";
 import { Link, useLoaderData } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from 'yup';
@@ -102,6 +102,119 @@ const User = () => {
     ))
   }
 
+  function BorrowList(){
+
+    const [getBorrowed, setBorrowed] = useState([]);
+
+    useEffect(()=>{  
+      async function fetchBorrowed(){
+        let borrowedEntries = (await BorrowService.getBorrowedByUserId(content.id)).data
+        //console.log(bookedEntries)
+        return borrowedEntries
+      }
+  
+      if(getBorrowed.length == 0){
+        fetchBorrowed().then((entries) => {
+          let activeBorrowed = entries.filter(entry => (entry.returnedDate == null))
+          console.log(activeBorrowed)
+          setBorrowed(activeBorrowed)
+        })
+      }
+    },[content])
+
+    async function handleRemoveFromBorrowed(bookId, borrowId){
+      console.log("handling it")
+      try{
+        let response = (await BorrowService.postToggleBorrowStatus(bookId, content.id, false)).data;
+        setBorrowed(getBorrowed.filter(el => el.id !== borrowId))
+      }catch(error){
+  
+      }
+    }
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    return(
+      (getBorrowed.length > 0) && getBorrowed.map((borrow) => 
+        <Col xs={6} md={6} className="p-1" key={borrow.id} >
+          <Row>
+            <Col md={2} xs={3} className="mx-auto text-align: center; ">
+              <Link to={`/books/${borrow.bookBasicinfo.id}`} className="text-decoration-none" >
+                <Image src={borrow.bookBasicinfo.imageUrl} fluid className="mh-100 mx-auto"/>
+              </Link>
+            </Col>
+            <Col fluid={"true"} md={9} xs={6} className="mx-auto">
+              <Link to={`/books/${borrow.bookBasicinfo.id}`} >
+                <h4 className="mt-2 text-decoration-none text-dark" >{borrow.bookBasicinfo.title}</h4>
+              </Link>
+              <p><b>Data wypożyczenia: </b>{new Date(borrow.borrowedDate).toLocaleDateString('pl-PL', options)}</p>
+              {borrow.returnedDate && <p><b>Data oddania: </b>{new Date(borrow.returnedDate).toLocaleDateString('pl-PL', options)}</p>}
+              {(currentUser.role == "admin") && 
+                <Button className="btn-info" id={borrow.bookBasicinfo.id} onClick={() => handleRemoveFromBorrowed(borrow.bookBasicinfo.id, borrow.id)}><i className="fa-solid fa-xmark"></i> Return</Button>
+              }
+            </Col>  
+          </Row>
+        </Col>
+    ))
+
+  }
+
+  function ReservedList(){
+
+    const [getReserved, setReserved] = useState([]);
+
+    useEffect(()=>{
+      async function fetchBooked(){
+        let bookedEntries = (await BorrowService.getBookedByUserId(content.id)).data
+        console.log(bookedEntries)
+        return bookedEntries
+      }
+      if(getReserved == []){
+        fetchBooked().then((entries) => {
+          let activeBooking = entries.filter(entry => (entry.isActive))
+          console.log(activeBooking)
+          setReserved(activeBooking)
+        })
+      }
+      
+    },[content])
+
+    async function handleRemoveFromBooked(bookId, bookingId){
+      console.log("handling it")
+      try{
+        let response = (await BorrowService.postToggleBookedStatus(bookId, content.id, false)).data;
+        setReserved(getReserved.filter(el => el.id !== bookingId))
+      }catch(error){
+  
+      }
+    }
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    return(
+      (getReserved.length > 0) && getReserved.map((booking) => 
+        <Col xs={6} md={6} className="p-1" key={booking.id} >
+          <Row>
+            <Col md={2} xs={3} className="mx-auto text-align: center; ">
+              <Link to={`/books/${booking.bookBasicinfo.id}`} className="text-decoration-none" >
+                <Image src={booking.bookBasicinfo.imageUrl} fluid className="mh-100 mx-auto"/>
+              </Link>
+            </Col>
+            <Col fluid={"true"} md={9} xs={6} className="mx-auto">
+              <Link to={`/books/${booking.bookBasicinfo.id}`} >
+                <h4 className="mt-2 text-decoration-none text-dark" >{booking.bookBasicinfo.title}</h4>
+              </Link>
+              <p><b>Data rezerwacji: </b>{new Date(booking.borrowedDate).toLocaleDateString('pl-PL', options)}</p>
+              {booking.bookingLimitDate && <p><b>Limit rezerwacji: </b>{new Date(booking.bookingLimitDate).toLocaleDateString('pl-PL', options)}</p>}
+              {(currentUser) && 
+                <Button className="btn-info" id={booking.bookBasicinfo.id} onClick={() => handleRemoveFromBooked(booking.bookBasicinfo.id, booking.id)}><i className="fa-solid fa-xmark"></i> Return</Button>
+              }
+            </Col>  
+          </Row>
+        </Col>
+    ))
+  }
+
   function DebtSection(){
     if(currentUser.role !== "admin")
       return
@@ -116,9 +229,9 @@ const User = () => {
           <Col sm={6} xs={6}>
             <Row>
               <Col sm={8} xs={8}>
-                <Form>
+                <Form id="test">
                   <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Control type="number" defaultValue={getDebt} id="debt-rep"/>
+                    <Form.Control type="number" defaultValue={getDebt}/>
                     <Form.Label>Enter the amount of debt to be repaid:</Form.Label>
                   </Form.Group>
                 </Form>
@@ -137,6 +250,22 @@ const User = () => {
     return(
       <Row>
         <DebtSection/>
+
+        <Col sm={12} xs={12}>
+          <hr/>
+          <h4>Borrowed:</h4>
+          <Row>
+            <BorrowList/>
+          </Row>
+        </Col>
+
+        <Col sm={12} xs={12}>
+          <hr/>
+          <h4>Reserved:</h4>
+          <Row>
+            <ReservedList/>
+          </Row>
+        </Col>
 
         <Col sm={12} xs={12}>
           <hr/>
