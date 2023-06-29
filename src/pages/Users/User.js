@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, Badge, Button, Container, Row, Col, Stack, Form } from "react-bootstrap";
+import { Image, Badge, Button, Container, Row, Col, Stack, Form, Modal } from "react-bootstrap";
 
 import BorrowService from "../../services/borrow.service";
 import { Link, useLoaderData } from "react-router-dom";
@@ -9,6 +9,9 @@ import { useForm} from "react-hook-form";
 
 import useUser from "../../services/useUser";
 import UserService from "../../services/user.service";
+import Select from 'react-select'
+import BookService from "../../services/book.service";
+
 
 const User = () => {
   const content = useLoaderData();
@@ -102,9 +105,67 @@ const User = () => {
     ))
   }
 
+  function BorrowConfirmationWindow({show, onClose}){
+
+    const [suggestions, setSuggestions] = useState([]);
+    const [selected, setSelected] = useState(null);
+
+    useEffect(()=>{
+      async function fetchSuggestions(){
+        let books = (await BookService.getBooks()).data
+        //console.log(books)
+        return books
+      }
+
+      fetchSuggestions().then((data) =>{
+        setSuggestions(data.map(book => ({
+            value: book.id,
+            label: book.id+": "+book.title
+        })))
+      })
+    },[show])
+
+    function onConfirm(){
+      BorrowService.postToggleBorrowStatus(selected, content.id, true).then(
+        (success) =>{
+          alert("Book was added to borrowed")
+          onClose()
+        },
+        (failure) =>{
+          alert("Book could not be borrowed: "+failure.response.data)
+        }
+      )
+    }
+
+    return(
+    <Modal show={show} onHide={onClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Col>
+          <Row className="p-1 text-center">Select book to add:</Row>
+          <Row>
+            <Select options={suggestions} isClearable isSearchable
+              onChange={(choice)=>setSelected(choice?.value)}
+            />
+          </Row>
+        </Col>
+        
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={onConfirm} disabled={(!selected)}>Confirm</Button>
+        <Button onClick={onClose}>Cancel</Button>
+      </Modal.Footer>
+    </Modal> 
+    )
+  }
+
   function BorrowList(){
 
     const [getBorrowed, setBorrowed] = useState([]);
+
+    const [confirmation, setConfirmation] = useState({show: false})
 
     useEffect(()=>{  
       async function fetchBorrowed(){
@@ -113,14 +174,12 @@ const User = () => {
         return borrowedEntries
       }
   
-      if(getBorrowed.length == 0){
         fetchBorrowed().then((entries) => {
           let activeBorrowed = entries.filter(entry => (entry.returnedDate == null))
           console.log(activeBorrowed)
           setBorrowed(activeBorrowed)
         })
-      }
-    },[content])
+    },[content, confirmation])
 
     async function handleRemoveFromBorrowed(bookId, borrowId){
       console.log("handling it")
@@ -135,7 +194,15 @@ const User = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
     return(
-      (getBorrowed.length > 0) && getBorrowed.map((borrow) => 
+      <>
+      <BorrowConfirmationWindow {...confirmation} onClose={() => setConfirmation({...confirmation, show: false})}/>
+      {currentUser.role === "admin" &&
+      <Row>
+        <Button variant="success" className="w-auto ms-auto" onClick={() => setConfirmation({show:true})}>+ Add book</Button> 
+      </Row>
+      }
+      
+      {(getBorrowed.length > 0) && getBorrowed.map((borrow) => 
         <Col xs={6} md={6} className="p-1" key={borrow.id} >
           <Row>
             <Col md={2} xs={3} className="mx-auto text-align: center; ">
@@ -155,7 +222,7 @@ const User = () => {
             </Col>  
           </Row>
         </Col>
-    ))
+    )}</>)
 
   }
 

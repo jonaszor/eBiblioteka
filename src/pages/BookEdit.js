@@ -167,7 +167,9 @@ export default function BookEdit({isAdd}){
 
     return(
         <div className="container bg-light shadow-lg">
-            <ConfirmationWindow {...confirmation} onClose={() => setConfirmation({...confirmation, show: false})}/>
+            <ConfirmationWindow {...confirmation} onClose={() => setConfirmation({...confirmation, show: false})}>
+                {confirmation.content}
+            </ConfirmationWindow>
             <Link to={"./.."}><Button>Back <i class="fa-solid fa-circle-chevron-left"></i></Button></Link>
         {(content || isAdd) ?  
         <form onSubmit={handleSubmit(onSubmit)}>
