@@ -43,6 +43,7 @@ const Home = () => {
             <h6 className="mx-2 font-weight-bold"><i class="fa-solid fa-newspaper"></i> Added: {formatDate(data.createdDate)} {data.createdDate !== data.lastUpdate && "| Update: " + formatDate(data.lastUpdate)}</h6>
             <p className="m-3">{data.content}</p>
           </Col>
+          {(currentUser?.role == "admin" || currentUser?.role == "pracownik") &&
           <Col xs={2}>
             <Row>
               <Col xs={6}>
@@ -53,6 +54,7 @@ const Home = () => {
               </Col>
             </Row>
           </Col>
+          }
         </Row>
     )
   }

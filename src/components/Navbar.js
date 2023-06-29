@@ -47,11 +47,13 @@ export default function Navbar({user}){
             </li>
           )}
 
+          {user && (
             <li className="nav-item">
               <NavLink to={"/users"} className="nav-link">
                 Users
               </NavLink>
             </li>
+          )}
         </div>
 
         {user ? (
