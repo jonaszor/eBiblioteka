@@ -3,7 +3,7 @@ import authHeader from "./auth-header";
 
 import AuthService from "./auth.service";
 
-const API_URL_USER = "http://srv09.mikr.us:20359/api/";
+const API_URL_USER = "https://newsservice.cytr.us/api/";
 
 const getNewsList = () => {
   return axios.get(API_URL_USER + "News");
