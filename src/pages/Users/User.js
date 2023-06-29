@@ -251,7 +251,7 @@ const User = () => {
                 <Image src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" thumbnail className="mx-2 img-thumbnail" style={{maxHeight: "150px"}}/>
               </Col>
               <Col fluid={"true"} md={8}>
-                <h5 className="">{userData.email} [{(isAccountBlocked == false) && <b style={{color: "#AB2328"}}>Blocked</b>}{(isAccountBlocked == true) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
+                <h5 className="">{userData.email} [{(isAccountBlocked == true) && <b style={{color: "#AB2328"}}>Blocked</b>}{(isAccountBlocked == false) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
                 {(userData.reactions && userData.reactions.length != 0) &&  <p className="m-0">Liked books: {userData.reactions.filter(reaction => reaction.like).length} <i className="fa-solid fa-thumbs-up"></i></p>}
                 {(userData.reactions && userData.reactions.length != 0) &&  <p className="m-0">Disliked books: {userData.reactions.filter(reaction => !reaction.like).length} <i className="fa-solid fa-thumbs-down"></i></p>}
                 <EditSection userData={userData}></EditSection>
@@ -263,7 +263,7 @@ const User = () => {
                     <Link to={`/users`}><Button>Back <i class="fa-solid fa-circle-chevron-left"></i></Button></Link>
                   </Col>
                   <Col xs={6} >
-                  {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button variant={isAccountBlocked ? "danger" : "success"} onClick={handleClickBlockAcc}>{isAccountBlocked ? <i className="fa-solid fa-user-slash"></i>  : <i className="fa-solid fa-user"></i>}{isAccountBlocked ? 'Block'  : 'Un-Block'}</Button></Link>}
+                  {(currentUser?.role == "admin") && <Link to={`/user/${userData.id}/profile`}><Button variant={!isAccountBlocked ? "danger" : "success"} onClick={handleClickBlockAcc}>{isAccountBlocked ? <i className="fa-solid fa-user-slash"></i>  : <i className="fa-solid fa-user"></i>}{isAccountBlocked ? 'Block'  : 'Un-Block'}</Button></Link>}
                   </Col>
                   
                 </Row>
@@ -285,7 +285,7 @@ const User = () => {
                 <Image src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" thumbnail className="mx-2 img-thumbnail" style={{maxHeight: "150px"}}/>
               </Col>
               <Col fluid={"true"} md={9}>
-                <h5 className="">{userData.email} [{(isAccountBlocked == false) && <b style={{color: "#AB2328"}}>Blocked</b>}{(isAccountBlocked == true) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
+                <h5 className="">{userData.email} [{(isAccountBlocked == true) && <b style={{color: "#AB2328"}}>Blocked</b>}{(isAccountBlocked == false) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
                 {(userData.reactions && userData.reactions.length != 0) &&  <p className="m-0">Liked books: {userData.reactions.filter(reaction => reaction.like).length} <i className="fa-solid fa-thumbs-up"></i></p>}
                 {(userData.reactions && userData.reactions.length != 0) &&  <p className="m-0">Disliked books: {userData.reactions.filter(reaction => !reaction.like).length} <i className="fa-solid fa-thumbs-down"></i></p>}
                 <p className="m-0">Current debt: {(getDebt != 0) && <b style={{color: "#AB2328"}}>{getDebt} zł</b>} {(getDebt == 0) && "-"}</p>
@@ -313,7 +313,7 @@ const User = () => {
                 <Image src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" thumbnail className="mx-2 img-thumbnail" style={{maxHeight: "150px"}}/>
               </Col>
               <Col fluid={"true"} md={9}>
-                <h5 className="">{userData.firstName} [{(isAccountBlocked == false) && <b style={{color: "#AB2328"}}>Blocked</b>}{(isAccountBlocked == true) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
+                <h5 className="">{userData.firstName} [{(isAccountBlocked == true) && <b style={{color: "#AB2328"}}>Blocked</b>}{(isAccountBlocked == false) && <b style={{color: "#5AAB2B"}}>Active</b>}]</h5>
                 {(userData.reactions && userData.reactions.length != 0) &&  <p className="m-0">Liked books: {userData.reactions.filter(reaction => reaction.like).length} <i className="fa-solid fa-thumbs-up"></i></p>}
                 {(userData.reactions && userData.reactions.length != 0) &&  <p className="m-0">Disliked books: {userData.reactions.filter(reaction => !reaction.like).length} <i className="fa-solid fa-thumbs-down"></i></p>}
                 {(userData.description) && <p className="m-0">Description: {userData.description}</p>}
